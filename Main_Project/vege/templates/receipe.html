@@ -9,7 +9,11 @@ Receipe Page
 <div class="container p-5">
 
     <h2 class="text-center text-primary m-2">RECEIPE ADD FORM</h2>
+
     <hr >
+
+   
+
     <form method="POST" enctype="multipart/form-data">
          {% csrf_token %} 
         <div class="form-group">
@@ -18,7 +22,7 @@ Receipe Page
           </div>
          <div class="form-group">
             <label for="exampleFormControlTextarea1">Receipe Description</label>
-            <textarea class="form-control" name="receipe_description   "id="exampleFormControlTextarea1" rows="3"></textarea placeholder="Enter Receipe Description" required>
+            <textarea class="form-control" placeholder="Enter Receipe Description" required name="receipe_description   "id="exampleFormControlTextarea1" rows="3"></textarea >
           </div>
           <div class="form-group">
           <label
@@ -34,17 +38,35 @@ Receipe Page
 <div class="container p-5">
     <h2 class="text-center text-primary m-2">ALL RECEIPE</h2>
     <hr >
+
+    <div class="container p-5">
+
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Receipe" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+
+    </div>
+    <hr>
     <div class="row">
         
             {% for receipe in receipes %}
-            <div class="col-sm-4">
+            <div class="col-sm-4 mt-5">
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="{{receipe.receipe.image}}" alt="Card image cap">
+                <img style="height: 250px;" class="card-img-top" src="/media/{{receipe.receipe_image}}" alt="Card image cap">
                 <div class="card-body">
                  <h3>Name: {{receipe.receipe_name}}</h3>
-                 <h3>Description: {{receipe.receipe_description}}</h3>
+                 <h5>Description: {{receipe.receipe_description}}</h5>
                 </div>
-            </div></div>
+                <div class="row" >
+                <a href="/delete-receipe/{{receipe.id}}/" >
+                <button type="button" class="btn btn-danger ml-2">Delete</button></a>
+                <a href="/update_receipe/{{receipe.id}}/" >
+                  <button type="button" class="btn btn-primary ml-2">Update</button></a>
+                </div>
+            </div>
+          </div>
+            
             {% endfor %}
         
       </div>

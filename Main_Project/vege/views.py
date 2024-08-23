@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Receipe
 # Create your views here.
 
-def vege_home(request):
+def receipes(request):
     if request.method=="POST":
       data=request.POST
       receipe_image=request.FILES.get('receipe_image')
@@ -13,11 +13,52 @@ def vege_home(request):
                              receipe_description=receipe_description,
                              receipe_image=receipe_image,
                              )
-      return redirect('/recipe/')
+      return redirect('/receipes/')
+    
     queryset=Receipe.objects.all()
-    print(type(queryset))
+    
+    if request.GET.get('search'):
+       print(request.GET.get('search'))
+       queryset=queryset.filter(receipe_name__icontains = request.GET.get('search'))
+
+
+
     context={
        'receipes':queryset
     }
 
     return render(request,"receipe.html",context)
+
+def delete_receipe(request,id):
+   queryset=Receipe.objects.get(id=id)
+   print(id)
+   queryset.delete()
+   return redirect('/receipes/')
+
+def update_receipe(request,id):
+   queryset=Receipe.objects.get(id=id)
+   
+   
+   if request.method=="POST":
+      data=request.POST
+
+      receipe_image=request.FILES.get('receipe_image')
+      receipe_name=data.get('receipe_name')
+      receipe_description=data.get('receipe_description')
+      
+      queryset.receipe_name=receipe_name
+      queryset.receipe_description=receipe_description
+
+      if receipe_image:
+        queryset.receipe_image=receipe_image
+      
+      queryset.save()
+
+      return redirect('/receipes/')
+   
+   context={
+       'receipe':queryset
+    }
+
+   return render(request,"update.html",context)
+   
