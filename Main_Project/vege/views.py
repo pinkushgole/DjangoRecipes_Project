@@ -1,11 +1,13 @@
 from django.shortcuts import render,redirect
-from .models import Receipe
+from .models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
-
-
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+ 
 # Create your views here.
 
+@login_required(login_url="/login/")
 def receipes(request):
     if request.method=="POST":
       data=request.POST
@@ -98,10 +100,27 @@ def login_page(request):
     if request.method=="POST":
        username=request.POST.get("username")
        password=request.POST.get("password")
-      #  print(username,password)
+       print(username,password)
 
-      # if User.objects.filter(username=username).exists():
-      #    messages.info(request,'Invailid username')
-      #    return redirect('/login/')
+       if not User.objects.filter(username = username).exists():
+         messages.info(request,'Invailid Username')
+         return redirect('/login/')
+
+       user=authenticate(username=username,password=password)
+
+       if user is None:
+           messages.info(request,'Invailid Password')
+           return redirect('/login/')
+       else:
+         #  login session me user ko save kar deti hai ki session yaad rakhe 
+          login(request,user)
+          return redirect('/receipes/')
+
 
     return render(request,"login.html")
+
+
+def user_logout(request):
+    logout(request)
+    messages.info(request,'User Logout !!!!! ')
+    return redirect('/login/')

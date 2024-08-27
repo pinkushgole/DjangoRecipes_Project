@@ -39,6 +39,8 @@ urlpatterns = [
 
     path("login/",login_page,name="login_page"),
 
+     path("logout/",user_logout,name="user_logout"),
+
     path("update_receipe/<id>/",update_receipe,name="update_receipe"),  
 ]
 
